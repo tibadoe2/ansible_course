@@ -17,6 +17,29 @@
         update_cache: yes
       when: ansible_distribution == "Ubuntu"
 
+    - name: create user
+      tags: always
+      ansible.builtin.user:
+        name: simone
+        groups: root
+          #        state: absent
+          #        remove: yes
+
+    - name:  add sudoers file for simone
+      tags: always
+      ansible.builtin.copy:
+        src: sudoer_simone
+        dest: /etc/sudoers.d/simone
+        owner: root
+        group: root
+        mode: 0440
+
+    - name: add ssh key for simone user
+      tags: always
+      ansible.builtin.authorized_key:
+        user: simone
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJeZ2chnF+xj/W5HCy+r9mjnVfEjPo7UwmdJd+Yjxbc+ wes@ubuntu-ws"
+
 - hosts: web_servers
   become: true
   tasks:
